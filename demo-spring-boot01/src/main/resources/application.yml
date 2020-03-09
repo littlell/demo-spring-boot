@@ -1,0 +1,21 @@
+foo: bar
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/spring?characterEncoding=utf8&useSSL=false
+  redis:
+    host: 127.0.0.1
+    port: 6379
+server:
+  port: 3000
+management:
+  #  security:
+  #    enabled: false
+  server:
+    port: 8001
+  endpoints:
+    enabled-by-default: true
+  endpoint:
+    mappings:
+      enabled: true
