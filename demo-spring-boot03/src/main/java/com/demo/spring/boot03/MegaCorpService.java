@@ -16,14 +16,14 @@ public class MegaCorpService {
 
   @PostConstruct
   public void init() {
-    megaCorpRepository.save(new MegaCorp("1", "John", "Smith", 25, "I love to go rock climbing", new ArrayList<String>() {{
+    megaCorpRepository.save(new MegaCorp("1", "John", "Smith", 25, "I love to go rock climbing", new ArrayList<>() {{
       add("sports");
       add("music");
     }}));
-    megaCorpRepository.save(new MegaCorp("2", "Jane", "Smith", 32, "I like to collect rock albums", new ArrayList<String>() {{
+    megaCorpRepository.save(new MegaCorp("2", "Jane", "Smith", 32, "I like to collect rock albums", new ArrayList<>() {{
       add("music");
     }}));
-    megaCorpRepository.save(new MegaCorp("3", "Douglas", "Fir", 35, "I like to build cabinets", new ArrayList<String>() {{
+    megaCorpRepository.save(new MegaCorp("3", "Douglas", "Fir", 35, "I like to build cabinets", new ArrayList<>() {{
       add("forestry");
     }}));
   }

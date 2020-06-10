@@ -1,6 +1,10 @@
 package com.demo.spring.boot03;
 
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.ResultsExtractor;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +21,9 @@ public class MegaCorpController {
 
   @Autowired
   private MegaCorpRepository megaCorpRepository;
+
+  @Autowired
+  private ElasticsearchTemplate elasticsearchTemplate;
 
   @GetMapping("/and")
   public Object and() {
@@ -139,4 +146,15 @@ public class MegaCorpController {
     return megaCorpRepository.search(searchQuery);
   }
 
+  /**
+   * Not Analyzed Fields
+   */
+  @GetMapping("/search/aggregations")
+  public Object aggregations() {
+    SearchQuery searchQuery = new NativeSearchQueryBuilder()
+        .addAggregation((AggregationBuilders.sum("ageTotal").field("age"))).build();
+
+
+    return elasticsearchTemplate.query(searchQuery, (ResultsExtractor<Object>) searchResponse -> searchResponse.getAggregations());
+  }
 }
