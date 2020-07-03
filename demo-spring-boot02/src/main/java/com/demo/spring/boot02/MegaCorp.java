@@ -1,9 +1,7 @@
-package com.demo.spring.boot03;
+package com.demo.spring.boot02;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.List;
 

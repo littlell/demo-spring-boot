@@ -1,4 +1,4 @@
-package com.demo.spring.boot04.sender;
+package com.demo.spring.boot03.sender;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

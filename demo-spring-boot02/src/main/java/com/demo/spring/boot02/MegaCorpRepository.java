@@ -1,4 +1,4 @@
-package com.demo.spring.boot03;
+package com.demo.spring.boot02;
 
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;

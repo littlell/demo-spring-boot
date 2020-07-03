@@ -1,4 +1,4 @@
-package com.demo.spring.boot04.receiver;
+package com.demo.spring.boot03.receiver;
 
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.Exchange;

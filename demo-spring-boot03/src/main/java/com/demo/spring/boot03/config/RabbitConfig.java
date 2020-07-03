@@ -1,4 +1,4 @@
-package com.demo.spring.boot04.config;
+package com.demo.spring.boot03.config;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

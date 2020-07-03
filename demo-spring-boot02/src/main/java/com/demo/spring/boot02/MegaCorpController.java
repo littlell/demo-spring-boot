@@ -1,6 +1,5 @@
-package com.demo.spring.boot03;
+package com.demo.spring.boot02;
 
-import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
