@@ -1,18 +1,22 @@
 package com.demo.spring.boot02;
 
-import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.apache.http.HttpHost;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.ResultsExtractor;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 @RestController
 @RequestMapping(value = "/megacorp")
@@ -22,7 +26,9 @@ public class MegaCorpController {
   private MegaCorpRepository megaCorpRepository;
 
   @Autowired
-  private ElasticsearchTemplate elasticsearchTemplate;
+  private RestHighLevelClient restHighLevelClient;
+
+  RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
 
   @GetMapping("/and")
   public Object and() {
@@ -122,38 +128,20 @@ public class MegaCorpController {
   }
 
   /**
-   * Analyzed Fields
+   * Dynamic query
    */
-  @GetMapping("/search/analyzedFields")
-  public Object analyzedFields() {
-    SearchQuery searchQuery = new NativeSearchQueryBuilder()
-        .withQuery(matchQuery("firstName", "jane"))
-        .build();
+  @GetMapping("/search/dynamic")
+  public Object dynamic() throws IOException {
+    SearchRequest searchRequest = new SearchRequest("megacorp");
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+    BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+    boolQueryBuilder.must(QueryBuilders.termQuery("lastName", "smith"));
+    boolQueryBuilder.must(QueryBuilders.termQuery("firstName", "John"));
+    searchSourceBuilder.query(boolQueryBuilder);
+    searchRequest.source(searchSourceBuilder);
+    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
-    return megaCorpRepository.search(searchQuery);
+    return searchResponse;
   }
 
-  /**
-   * Not Analyzed Fields
-   */
-  @GetMapping("/search/notAnalyzedFields")
-  public Object notAnalyzedFields() {
-    SearchQuery searchQuery = new NativeSearchQueryBuilder()
-        .withQuery(matchQuery("about", "collect"))
-        .build();
-
-    return megaCorpRepository.search(searchQuery);
-  }
-
-  /**
-   * Not Analyzed Fields
-   */
-  @GetMapping("/search/aggregations")
-  public Object aggregations() {
-    SearchQuery searchQuery = new NativeSearchQueryBuilder()
-        .addAggregation((AggregationBuilders.sum("ageTotal").field("age"))).build();
-
-
-    return elasticsearchTemplate.query(searchQuery, (ResultsExtractor<Object>) searchResponse -> searchResponse.getAggregations());
-  }
 }
