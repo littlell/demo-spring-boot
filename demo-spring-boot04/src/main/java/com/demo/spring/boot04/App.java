@@ -2,8 +2,10 @@ package com.demo.spring.boot04;
 
 import com.demo.spring.boot04.entity.Vet;
 import com.demo.spring.boot04.repository.VetRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,28 +19,31 @@ import java.util.UUID;
  * Hello world!
  */
 @SpringBootApplication
-public class App {
+public class App implements CommandLineRunner{
 
-    private final static Logger log = LoggerFactory.getLogger(App.class);
+  @Autowired
+  private VetRepository vetRepository;
 
-    public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
-    }
+  private final static Logger log = LoggerFactory.getLogger(App.class);
 
-    @Bean
-    public CommandLineRunner clr(VetRepository vetRepository) {
-        return args -> {
-            vetRepository.deleteAll();
+  public static void main(String[] args) {
+    SpringApplication.run(App.class, args);
+  }
 
-            Vet john = new Vet(UUID.randomUUID(), "John", "Doe", new HashSet<>(Arrays.asList("surgery")));
-            Vet jane = new Vet(UUID.randomUUID(), "Jane", "Doe", new HashSet<>(Arrays.asList("radiology, surgery")));
+  @Override
+  public void run(String... args) throws Exception {
+    vetRepository.deleteAll();
 
-            Vet savedJohn = vetRepository.save(john);
-            Vet savedJane = vetRepository.save(jane);
+    Vet john = new Vet(UUID.randomUUID(), "John", "Doe", new HashSet<>(Arrays.asList("surgery")));
+    Vet jane = new Vet(UUID.randomUUID(), "Jane", "Doe", new HashSet<>(Arrays.asList("radiology, surgery")));
 
-            vetRepository.findAll().forEach(v -> log.info("Vet: {}", v.getFirstName()));
+    Vet savedJohn = vetRepository.save(john);
+    Vet savedJane = vetRepository.save(jane);
 
-            vetRepository.findById(savedJohn.getId()).ifPresent(v -> log.info("Vet by id: {}", v.getFirstName()));
-        };
-    }
+    vetRepository.findAll().forEach(v -> log.info("Vet: {}", v.getFirstName()));
+
+    vetRepository.findById(savedJohn.getId()).ifPresent(v -> log.info("Vet by id: {}", v.getFirstName()));
+
+    System.exit(0);
+  }
 }
