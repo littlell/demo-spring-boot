@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CacheService {
 
-  @Cacheable("myCache")
+  @Cacheable("cache1")
   public String cacheable(String key) {
     System.out.println("Fetching data for key: " + key);
     // 模拟缓慢的数据访问
@@ -21,7 +21,7 @@ public class CacheService {
     return "Cached data for " + key;
   }
 
-  @CachePut("myCache")
+  @CachePut("cache1")
   public String cachePut(String key) {
     System.out.println("Fetching data for key: " + key);
     // 模拟缓慢的数据访问
@@ -33,21 +33,13 @@ public class CacheService {
     return "Cached data for " + key;
   }
 
-  @CacheEvict(cacheNames = "myCache", key = "#key")
+  @CacheEvict(cacheNames = "cache1", key = "#key")
   public void clearCacheItem(String key) {
     // 执行清除缓存项的逻辑
   }
 
-  @CacheEvict(cacheNames = "myCache", allEntries = true)
+  @Caching(evict = {@CacheEvict(cacheNames = "cache1", allEntries = true), @CacheEvict(cacheNames = "cache2", allEntries = true)})
   public void clearCache() {
     // 执行清除整个缓存的逻辑
-  }
-
-  @Caching(cacheable = {@Cacheable(cacheNames = "cache1", key = "#id"), @Cacheable(cacheNames = "cache2", key = "#name")})
-  public String caching(Long id, String name) {
-    // 从数据库中获取用户信息
-    System.out.println("Fetching data for id=" + id + ", name=" + name);
-
-    return "person";
   }
 }

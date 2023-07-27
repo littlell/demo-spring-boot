@@ -33,9 +33,4 @@ public class CacheController {
     cacheService.clearCache();
     return "success";
   }
-
-  @GetMapping("/caching")
-  public String caching(@RequestParam Long id, @RequestParam String name) {
-    return cacheService.caching(id, name);
-  }
 }
