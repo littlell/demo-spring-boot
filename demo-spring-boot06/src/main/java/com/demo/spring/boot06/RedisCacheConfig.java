@@ -6,24 +6,19 @@ import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 import java.util.Arrays;
 
 @Configuration
-@ConditionalOnProperty(name = "cache.type", havingValue = "map")
-public class MapCacheConfig {
+@ConditionalOnProperty(name = "cache.type", havingValue = "redis")
+public class RedisCacheConfig {
 
   @Bean
-  public CacheManager cacheManager() {
-    SimpleCacheManager cacheManager = new SimpleCacheManager();
+  public CacheManager cacheManager(RedisConnectionFactory factory) {
 
-    // 配置缓存名称和缓存对象
-    ConcurrentMapCache cache1 = new ConcurrentMapCache("cache1");
-    ConcurrentMapCache cache2 = new ConcurrentMapCache("cache2");
-
-    cacheManager.setCaches(Arrays.asList(cache1, cache2));
-
-    System.out.println("Map cache init.");
+    RedisCacheManager cacheManager = RedisCacheManager.builder(factory).transactionAware().build();
 
     return cacheManager;
   }

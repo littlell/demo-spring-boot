@@ -1,5 +1,5 @@
 cache:
-  type: ehcache
+  type: redis
 spring:
   redis:
     host: localhost
