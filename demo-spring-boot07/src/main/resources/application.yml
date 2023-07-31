@@ -1,0 +1,9 @@
+spring:
+  rabbitmq:
+    host: ngtrade-middleware-rabbitmq
+    password: 123456
+    port: 5672
+    username: ngtrade
+    virtual-host: /
+  kafka:
+    bootstrap-servers: localhost:9092

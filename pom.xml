@@ -28,6 +28,7 @@
     <module>demo-spring-boot04</module>
     <module>demo-spring-boot05</module>
     <module>demo-spring-boot06</module>
+    <module>demo-spring-boot07</module>
   </modules>
 
   <build>
