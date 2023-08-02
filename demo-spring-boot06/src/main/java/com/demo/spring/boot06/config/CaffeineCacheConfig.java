@@ -1,4 +1,4 @@
-package com.demo.spring.boot06;
+package com.demo.spring.boot06.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 

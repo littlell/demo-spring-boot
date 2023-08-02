@@ -1,4 +1,6 @@
-package com.demo.spring.boot06;
+package com.demo.spring.boot06.service;
+
+import com.demo.spring.boot06.entity.User;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -41,5 +43,15 @@ public class CacheService {
   @Caching(evict = {@CacheEvict(cacheNames = "cache1", allEntries = true), @CacheEvict(cacheNames = "cache2", allEntries = true)})
   public void clearCache() {
     // 执行清除整个缓存的逻辑
+  }
+
+  @Cacheable(value = "cache1", key = "'object'")
+  public User cacheObject() {
+
+    System.out.println("Fetching object data");
+
+    User user = new User("foo", 1);
+
+    return user;
   }
 }

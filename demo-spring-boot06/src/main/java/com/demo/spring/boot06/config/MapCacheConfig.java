@@ -1,4 +1,4 @@
-package com.demo.spring.boot06;
+package com.demo.spring.boot06.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;

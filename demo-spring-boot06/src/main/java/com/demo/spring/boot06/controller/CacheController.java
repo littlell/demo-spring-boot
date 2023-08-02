@@ -1,4 +1,7 @@
-package com.demo.spring.boot06;
+package com.demo.spring.boot06.controller;
+
+import com.demo.spring.boot06.service.CacheService;
+import com.demo.spring.boot06.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,5 +34,12 @@ public class CacheController {
   public String cleanCache() {
     cacheService.clearCache();
     return "success";
+  }
+
+  @GetMapping("/cache-object")
+  public String cacheObject() {
+    User user = cacheService.cacheObject();
+
+    return "OK";
   }
 }
