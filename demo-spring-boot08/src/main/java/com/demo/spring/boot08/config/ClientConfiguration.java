@@ -6,12 +6,9 @@ import org.springframework.http.codec.cbor.Jackson2CborDecoder;
 import org.springframework.http.codec.cbor.Jackson2CborEncoder;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.RSocketStrategies;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
-import java.time.Duration;
-
-import reactor.util.retry.Retry;
+import java.net.URI;
 
 @Configuration
 public class ClientConfiguration {
@@ -29,6 +26,9 @@ public class ClientConfiguration {
   public RSocketRequester rSocketRequester(RSocketStrategies rSocketStrategies) {
     RSocketRequester.Builder builder = RSocketRequester.builder();
     builder.rsocketStrategies(rSocketStrategies);
-    return builder.tcp("localhost", 7000);
+    // 使用TCP协议通信时指定
+    // return builder.tcp("localhost", 7000);
+    // 使用HTTP协议通信时指定
+    return builder.websocket(URI.create("ws://localhost:8080/rsocket"));
   }
 }

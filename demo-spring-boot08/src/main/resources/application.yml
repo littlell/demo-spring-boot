@@ -1,4 +1,8 @@
 spring:
   rsocket:
     server:
-      port: 7000
+      # 使用TCP协议通信时指定
+      # port: 7000
+      # 使用HTTP协议通信时指定
+      transport: websocket
+      mapping-path: /rsocket

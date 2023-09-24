@@ -18,6 +18,9 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class StockController {
 
+  /**
+   * rsocket-cli --request --route=stock/sk  ws://127.0.0.1:8080/rsocket
+   */
   @MessageMapping("stock/{symbol}")
   public Flux<StockQuote> getStockPrice(
       @DestinationVariable("symbol") String symbol) {
