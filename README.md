@@ -8,3 +8,5 @@
  demo-spring-boot04 | spring-boot-starter-data-cassandra     
  demo-spring-boot05 | spring-boot-starter-data-mongo         
  demo-spring-boot06 | spring-boot-starter-cache              
+ demo-spring-boot07 | mq                                     
+ demo-spring-boot08 | spring-boot-starter-rsocket            
