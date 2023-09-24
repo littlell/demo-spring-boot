@@ -1,5 +1,6 @@
 package com.demo.spring.boot08.controller;
 
+import com.demo.spring.boot08.dto.Alert;
 import com.demo.spring.boot08.dto.StockQuote;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -48,6 +51,16 @@ public class TestController {
         .doOnNext(stockQuote ->
             log.info("Price of {} : {} (at {})", stockQuote.getSymbol(), stockQuote.getPrice(), stockQuote.getTimestamp())
         )
+        .subscribe();
+    return "success";
+  }
+
+  @GetMapping("/alert")
+  public String sendAlert() {
+    rSocketRequester
+        .route("alert")
+        .data(new Alert(Alert.Level.RED, "littlell", Instant.now()))
+        .send()
         .subscribe();
     return "success";
   }
