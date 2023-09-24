@@ -26,7 +26,8 @@ public class StockController {
         .map(i -> {
           BigDecimal price = BigDecimal.valueOf(Math.random() * 10);
           return new StockQuote(symbol, price, Instant.now());
-        });
+        })
+        .take(3);
 
   }
 }

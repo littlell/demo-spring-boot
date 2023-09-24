@@ -47,7 +47,8 @@ public class TestController {
         .retrieveFlux(StockQuote.class)
         .doOnNext(stockQuote ->
             log.info("Price of {} : {} (at {})", stockQuote.getSymbol(), stockQuote.getPrice(), stockQuote.getTimestamp())
-        );
+        )
+        .subscribe();
     return "success";
   }
 }
