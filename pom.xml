@@ -30,6 +30,7 @@
     <module>demo-spring-boot06</module>
     <module>demo-spring-boot07</module>
     <module>demo-spring-boot08</module>
+    <module>demo-spring-boot09</module>
   </modules>
 
   <build>

@@ -2,11 +2,12 @@ foo: bar
 spring:
   datasource:
     username: root
-    password: 123456
+    password: Ngtrade!@#
     url: jdbc:mysql://127.0.0.1:3306/spring?characterEncoding=utf8&useSSL=false
   redis:
     host: 127.0.0.1
     port: 6379
+    password: 123456
 server:
   port: 8080
 management:
@@ -16,6 +17,11 @@ management:
     port: 8001
   endpoints:
     enabled-by-default: true
+    web:
+      exposure:
+        include: "*"
   endpoint:
+    health:
+      show-details: always
     mappings:
       enabled: true
