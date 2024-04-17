@@ -1,19 +1,37 @@
 package com.demo.spring.boot09;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 @Component
 public class ExternalAPICaller {
-  private final RestTemplate restTemplate;
 
-  @Autowired
-  public ExternalAPICaller(RestTemplate restTemplate) {
-    this.restTemplate = restTemplate;
+  private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
+  private boolean recovered = false;
+
+  public void setRecovered(boolean recovered) {
+    this.recovered = recovered;
   }
 
-  public String callApi() {
-    return restTemplate.getForObject("/api/external", String.class);
+  public String callFailureApi() {
+    if (recovered) {
+      LOGGER.info("call health remote api.");
+      return "hello";
+    } else {
+      LOGGER.info("call failure remote api.");
+      throw new RuntimeException("ex");
+    }
+  }
+
+  public String callSlownessApi() throws InterruptedException {
+    if (recovered) {
+      LOGGER.info("call fast remote api.");
+    } else {
+      LOGGER.info("call slowness remote api.");
+      Thread.sleep(1500);
+    }
+    return "hello";
   }
 }

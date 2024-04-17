@@ -9,14 +9,20 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @RestController
 @RequestMapping("/api/")
-public class ResilientAppController {
+public class APIController {
 
   @Autowired
   ExternalAPICaller externalAPICaller;
 
-  @GetMapping("/circuit-breaker")
+  @GetMapping("/circuit-breaker/failure")
   @CircuitBreaker(name = "CircuitBreakerService")
-  public String circuitBreakerApi() {
-    return externalAPICaller.callApi();
+  public String failure() {
+    return externalAPICaller.callFailureApi();
+  }
+
+  @GetMapping("/circuit-breaker/slowness")
+  @CircuitBreaker(name = "CircuitBreakerService")
+  public String slowness() throws InterruptedException {
+    return externalAPICaller.callSlownessApi();
   }
 }
