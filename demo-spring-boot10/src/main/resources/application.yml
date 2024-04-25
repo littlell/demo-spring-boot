@@ -39,6 +39,22 @@ spring:
           predicates:
             - Query=red, gree.
         - id: remoteaddr_route
-          uri: https://www.sohu.com
+          uri: https://www.sina.com.cn/
           predicates:
             - RemoteAddr=127.0.0.2/32
+        - id: xforwarded_remoteaddr_route
+          uri: https://www.sina.com.cn/
+          predicates:
+            - XForwardedRemoteAddr=192.168.1.1/24
+        - id: circuitbreaker_route
+          uri: lb://backing-service:8088
+          predicates:
+            - Path=/consumingServiceEndpoint
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/error/503
+                statusCodes:
+                  - 500
+                  - "NOT_FOUND"
