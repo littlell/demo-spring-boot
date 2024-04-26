@@ -46,10 +46,10 @@ spring:
           uri: https://www.sina.com.cn/
           predicates:
             - XForwardedRemoteAddr=192.168.1.1/24
-        - id: circuitbreaker_route
+        - id: circuitbreaker_route_1
           uri: lb://backing-service:8088
           predicates:
-            - Path=/consumingServiceEndpoint
+            - Path=/circuitbreaker-route-1
           filters:
             - name: CircuitBreaker
               args:
@@ -58,3 +58,60 @@ spring:
                 statusCodes:
                   - 500
                   - "NOT_FOUND"
+        - id: circuitbreaker_route_2
+          uri: lb://backing-service:8088
+          predicates:
+            - Path=/circuitbreaker-route-2
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/error/500
+            - RewritePath=/circuitbreaker-route-2, /backingServiceEndpoint
+
+
+        - id: circuitbreaker_route_3
+          uri: lb://backing-service:8088
+          predicates:
+            - Path=/circuitbreaker-route-3/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/nba
+        - id: circuitbreaker_route_3_fallback
+          uri: https://sports.sina.com.cn
+          predicates:
+            - Path=/nba
+
+        - id: circuitbreaker_route_4
+          uri: lb://backing-service:8088
+          predicates:
+            - Path=/circuitbreaker-route-4/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/nba
+        - id: circuitbreaker_route_4_fallback
+          uri: https://sports.sina.com.cn
+          predicates:
+            - Path=/nba
+          filters:
+            - name: FallbackHeaders
+              args:
+                executionExceptionTypeHeaderName: Test-Header
+
+        - id: map_request_header_route
+          uri: https://www.sina.com.cn/
+          predicates:
+            - Path=/map-request-header
+          filters:
+            - MapRequestHeader=Blue, X-Request-Red
+
+        - id: prefixpath_route
+          uri: https://www.sina.com.cn
+          predicates:
+            - Path=/prefixpath
+          filters:
+            - PrefixPath=/pre
