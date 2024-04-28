@@ -1,6 +1,14 @@
 spring:
+  redis:
+    host: dev-middleware-redis
+    password: 123456
+    timeout: 5s
+    database: 0
   cloud:
     gateway:
+      filter:
+        request-rate-limiter:
+          deny-empty-key: false
       routes:
         - id: cookie_route
           uri: https://www.sina.com.cn/
@@ -115,3 +123,17 @@ spring:
             - Path=/prefixpath
           filters:
             - PrefixPath=/pre
+
+        - id: request_ratelimiter_route
+          uri: https://www.sina.com.cn
+          predicates:
+            - Path=/request-ratelimiter
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 60
+                redis-rate-limiter.requestedTokens: 60
+#                redis-rate-limiter.replenishRate: 10
+#                redis-rate-limiter.burstCapacity: 20
+#                redis-rate-limiter.requestedTokens: 1
