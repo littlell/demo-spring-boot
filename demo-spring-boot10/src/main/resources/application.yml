@@ -54,6 +54,12 @@ spring:
           uri: https://www.sina.com.cn/
           predicates:
             - XForwardedRemoteAddr=192.168.1.1/24
+
+
+
+
+
+        # 熔断配置
         - id: circuitbreaker_route_1
           uri: lb://backing-service:8088
           predicates:
@@ -124,16 +130,16 @@ spring:
           filters:
             - PrefixPath=/pre
 
+        # 限流配置
         - id: request_ratelimiter_route
           uri: https://www.sina.com.cn
           predicates:
-            - Path=/request-ratelimiter
+            - Path=/request-ratelimiter/**
           filters:
             - name: RequestRateLimiter
               args:
+                name: REDIS
+                key-resolver: "#{@ipKeyResolver}"
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter.burstCapacity: 60
                 redis-rate-limiter.requestedTokens: 60
-#                redis-rate-limiter.replenishRate: 10
-#                redis-rate-limiter.burstCapacity: 20
-#                redis-rate-limiter.requestedTokens: 1
