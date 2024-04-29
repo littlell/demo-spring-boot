@@ -1,11 +1,13 @@
-cache:
-  type: ehcache
+#cache:
+#  type: ehcache1
 spring:
+  cache:
+    type: jcache
+    jcache:
+      provider: org.ehcache.jsr107.EhcacheCachingProvider
   data:
     redis:
       host: dev-middleware-redis
       port: 6379
       password: 123456
       database: 1
-  main:
-
