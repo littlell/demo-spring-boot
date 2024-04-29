@@ -1,5 +1,4 @@
 spring:
-  data:
-    elasticsearch:
-      cluster-name: dev_es_cluster
-      cluster-nodes: localhost:9300
+  elasticsearch:
+    rest:
+      uris: "http://dev-middleware-es:9200"

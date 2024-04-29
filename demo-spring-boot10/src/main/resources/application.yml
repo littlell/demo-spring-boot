@@ -1,4 +1,6 @@
 spring:
+  codec:
+    max-in-memory-size: 16MB
   redis:
     host: dev-middleware-redis
     password: 123456
@@ -143,3 +145,72 @@ spring:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter.burstCapacity: 60
                 redis-rate-limiter.requestedTokens: 60
+
+        # 重定向
+        - id: redirect_route
+          uri: https://www.sohu.com
+          predicates:
+            - Path=/redirect/**
+          filters:
+            - RedirectTo=302, https://www.sina.com.cn
+
+        # 重写
+        - id: rewrite_path1_route
+          uri: https://order.glodon.com
+          predicates:
+            - Path=/rewrite-path-1/**
+          filters:
+            - RewritePath=/rewrite-path-1/?(?<segment>.*), /$\{segment}
+        - id: rewrite_path2_route
+          uri: https://order.glodon.com
+          predicates:
+            - Path=/rewrite-path-2/**
+          filters:
+            - RewritePath=/rewrite-path-2/?(?<segment>.*), /rewrite-path-2-new/$\{segment}
+        - id: rewrite_path3_route
+          uri: https://order.glodon.com
+          predicates:
+            - Path=/rewrite-path-3/**
+          filters:
+            - RewritePath=/rewrite-path-3/?(?<segment>.*), /rewrite-path-3-new/rewrite-path-3/$\{segment}
+
+        # Set path
+        - id: set_path_route
+          uri: https://order.glodon.com
+          predicates:
+            - Path=/set-path/{segment}
+          filters:
+            - SetPath=/{segment}
+
+        # Set status
+        - id: set_status_1_route
+          uri: https://www.sina.com.cn
+          predicates:
+            - Path=/set-status-1/**
+          filters:
+            - SetStatus=UNAUTHORIZED
+        - id: set_status_2_route
+          uri: https://www.sina.com.cn
+          predicates:
+            - Path=/set-status-2/**
+          filters:
+            - SetStatus=401
+
+        # Strip prefix
+        - id: strip_prefix_route
+          uri: https://order.glodon.com
+          predicates:
+            - Path=/strip-prefix/**
+          filters:
+            - StripPrefix=2
+
+        # Request size
+        - id: request_size_route
+          uri: https://order.glodon.com
+          predicates:
+            - Path=/request_size
+          filters:
+            - name: RequestSize
+              args:
+                # Bytes
+                maxSize: 1

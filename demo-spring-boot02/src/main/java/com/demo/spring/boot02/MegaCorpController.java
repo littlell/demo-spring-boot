@@ -1,14 +1,6 @@
 package com.demo.spring.boot02;
 
-import org.apache.http.HttpHost;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +18,7 @@ public class MegaCorpController {
   private MegaCorpRepository megaCorpRepository;
 
   @Autowired
-  private RestHighLevelClient restHighLevelClient;
-
-  RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+  private ElasticsearchTemplate elasticsearchTemplate;
 
   @GetMapping("/and")
   public Object and() {
@@ -130,18 +120,18 @@ public class MegaCorpController {
   /**
    * Dynamic query
    */
-  @GetMapping("/search/dynamic")
-  public Object dynamic() throws IOException {
-    SearchRequest searchRequest = new SearchRequest("megacorp");
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-    boolQueryBuilder.must(QueryBuilders.termQuery("lastName", "smith"));
-    boolQueryBuilder.must(QueryBuilders.termQuery("firstName", "John"));
-    searchSourceBuilder.query(boolQueryBuilder);
-    searchRequest.source(searchSourceBuilder);
-    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-
-    return searchResponse;
-  }
+//  @GetMapping("/search/dynamic")
+//  public Object dynamic() throws IOException {
+//    SearchRequest searchRequest = new SearchRequest("megacorp");
+//    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+//    BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+//    boolQueryBuilder.must(QueryBuilders.termQuery("lastName", "smith"));
+//    boolQueryBuilder.must(QueryBuilders.termQuery("firstName", "John"));
+//    searchSourceBuilder.query(boolQueryBuilder);
+//    searchRequest.source(searchSourceBuilder);
+//    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+//
+//    return searchResponse;
+//  }
 
 }
