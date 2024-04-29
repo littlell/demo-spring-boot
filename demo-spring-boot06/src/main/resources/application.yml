@@ -1,8 +1,11 @@
 cache:
-  type: redis
+  type: ehcache
 spring:
-  redis:
-    host: dev-middleware-redis
-    port: 6379
-    password: 123456
-    database: 1
+  data:
+    redis:
+      host: dev-middleware-redis
+      port: 6379
+      password: 123456
+      database: 1
+  main:
+
