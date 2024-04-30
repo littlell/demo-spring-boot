@@ -1,7 +1,7 @@
 spring:
   cache:
     # GENERIC, JCACHE, HAZELCAST, COUCHBASE, INFINISPAN, REDIS, CACHE2K, CAFFEINE, SIMPLE, NONE;
-    type: CAFFEINE
+    type: REDIS
     cache-names: cache1, cache2
   data:
     redis:

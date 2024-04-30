@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DemoController {
 
   @RequestMapping("/demo")
-  public ResponseEntity<String> rewritePath1(@RequestBody Object requestBody) {
+  public ResponseEntity<String> demo() {
     String body = "demo";
     return new ResponseEntity<>(body, new HttpHeaders(), HttpStatus.OK);
   }

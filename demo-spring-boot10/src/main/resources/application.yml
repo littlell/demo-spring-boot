@@ -1,6 +1,4 @@
 spring:
-  codec:
-    max-in-memory-size: 16MB
   redis:
     host: dev-middleware-redis
     password: 123456
@@ -8,32 +6,35 @@ spring:
     database: 0
   cloud:
     gateway:
+      httpclient:
+        max-header-size: 1MB
       filter:
         request-rate-limiter:
           deny-empty-key: false
       routes:
-        - id: cookie_route
-          uri: https://www.sina.com.cn/
-          predicates:
-            - Cookie=mycookie,mycookievalue
+        # After route
         - id: after_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - After=2050-04-20T15:00:00+08:00
+        # Before route
         - id: before_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - Before=2020-04-20T15:00:00+08:00
+        # Between route
         - id: between_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - Between=2040-01-20T17:42:47+08:00, 2050-01-21T17:42:47+08:00
+        # Header key match route
         - id: header_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - Header=X-Request-Id, \d+
+        # Header host match route
         - id: host_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - Host=**.dev.com
         - id: method_route
@@ -205,12 +206,12 @@ spring:
             - StripPrefix=2
 
         # Request size
-        - id: request_size_route
-          uri: https://order.glodon.com
-          predicates:
-            - Path=/request_size
-          filters:
-            - name: RequestSize
-              args:
-                # Bytes
-                maxSize: 1
+#        - id: request_size_route
+#          uri: https://order.glodon.com
+#          predicates:
+#            - Path=/request_size
+#          filters:
+#            - name: RequestSize
+#              args:
+#                # Bytes
+#                maxSize: 1

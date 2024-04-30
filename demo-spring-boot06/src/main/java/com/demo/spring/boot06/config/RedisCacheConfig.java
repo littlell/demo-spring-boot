@@ -48,8 +48,6 @@ public class RedisCacheConfig {
     template.setConnectionFactory(connectionFactory);
     template.setKeySerializer(new StringRedisSerializer());
 
-    Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
-
     ObjectMapper om = new ObjectMapper();
     om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
     om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
@@ -66,7 +64,8 @@ public class RedisCacheConfig {
 
     om.registerModule(javaTimeModule);
 
-    jackson2JsonRedisSerializer.setObjectMapper(om);
+    Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(om, Object.class);
+
     template.setKeySerializer(new StringRedisSerializer());
     template.setValueSerializer(jackson2JsonRedisSerializer);
 
