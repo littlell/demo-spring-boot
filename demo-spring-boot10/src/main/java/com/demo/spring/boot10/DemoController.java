@@ -16,4 +16,10 @@ public class DemoController {
     String body = "demo";
     return new ResponseEntity<>(body, new HttpHeaders(), HttpStatus.OK);
   }
+
+  @RequestMapping("/new/prefix-path")
+  public ResponseEntity<String> newPrefixPath() {
+    String body = "new-prefix-path";
+    return new ResponseEntity<>(body, new HttpHeaders(), HttpStatus.OK);
+  }
 }

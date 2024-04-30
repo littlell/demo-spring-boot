@@ -6,11 +6,6 @@ spring:
     database: 0
   cloud:
     gateway:
-      httpclient:
-        max-header-size: 1MB
-      filter:
-        request-rate-limiter:
-          deny-empty-key: false
       routes:
         # After route
         - id: after_route
@@ -37,30 +32,31 @@ spring:
           uri: forward:/demo
           predicates:
             - Host=**.dev.com
+        # Method route
         - id: method_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
-            - Method=HEAD,DELETE
+            - Method=PUT,DELETE
+        # 路径匹配，支持多个
         - id: path_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
-            - Path=/red/{segment},/blue/{segment}
+            - Path=/path/{segment}
+        # 参数匹配
         - id: query_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - Query=red, gree.
+        # 源IP
         - id: remoteaddr_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - RemoteAddr=127.0.0.2/32
+        # X-Forwarded-For header
         - id: xforwarded_remoteaddr_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - XForwardedRemoteAddr=192.168.1.1/24
-
-
-
-
 
         # 熔断配置
         - id: circuitbreaker_route_1
@@ -85,8 +81,6 @@ spring:
                 name: myCircuitBreaker
                 fallbackUri: forward:/error/500
             - RewritePath=/circuitbreaker-route-2, /backingServiceEndpoint
-
-
         - id: circuitbreaker_route_3
           uri: lb://backing-service:8088
           predicates:
@@ -95,12 +89,11 @@ spring:
             - name: CircuitBreaker
               args:
                 name: myCircuitBreaker
-                fallbackUri: forward:/nba
+                fallbackUri: forward:/demo
         - id: circuitbreaker_route_3_fallback
-          uri: https://sports.sina.com.cn
+          uri: forward:/demo
           predicates:
-            - Path=/nba
-
+            - Path=/demo
         - id: circuitbreaker_route_4
           uri: lb://backing-service:8088
           predicates:
@@ -109,33 +102,35 @@ spring:
             - name: CircuitBreaker
               args:
                 name: myCircuitBreaker
-                fallbackUri: forward:/nba
+                fallbackUri: forward:/demo
         - id: circuitbreaker_route_4_fallback
-          uri: https://sports.sina.com.cn
+          uri: forward:/demo
           predicates:
-            - Path=/nba
+            - Path=/demo
           filters:
             - name: FallbackHeaders
               args:
                 executionExceptionTypeHeaderName: Test-Header
 
+        # 基于原始header的值生成新的header
         - id: map_request_header_route
-          uri: https://www.sina.com.cn/
+          uri: forward:/demo
           predicates:
             - Path=/map-request-header
           filters:
             - MapRequestHeader=Blue, X-Request-Red
 
-        - id: prefixpath_route
-          uri: https://www.sina.com.cn
+        # 增加前缀
+        - id: prefix_path_route
+          uri: http://localhost:8080
           predicates:
-            - Path=/prefixpath
+            - Path=/prefix-path
           filters:
-            - PrefixPath=/pre
+            - PrefixPath=/new
 
         # 限流配置
         - id: request_ratelimiter_route
-          uri: https://www.sina.com.cn
+          uri: forward:/demo
           predicates:
             - Path=/request-ratelimiter/**
           filters:
