@@ -1,10 +1,8 @@
-#cache:
-#  type: ehcache1
 spring:
   cache:
-    type: jcache
-    jcache:
-      provider: org.ehcache.jsr107.EhcacheCachingProvider
+    # GENERIC, JCACHE, HAZELCAST, COUCHBASE, INFINISPAN, REDIS, CACHE2K, CAFFEINE, SIMPLE, NONE;
+    type: CAFFEINE
+    cache-names: cache1, cache2
   data:
     redis:
       host: dev-middleware-redis

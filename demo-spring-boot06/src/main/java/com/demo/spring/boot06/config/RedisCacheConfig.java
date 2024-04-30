@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Configuration
-@ConditionalOnProperty(name = "cache.type", havingValue = "redis")
+@ConditionalOnProperty(name = "spring.cache.type", havingValue = "REDIS")
 public class RedisCacheConfig {
 
   /**
@@ -89,6 +89,7 @@ public class RedisCacheConfig {
 
     RedisCacheManager cm = RedisCacheManager.builder(RedisCacheWriter.lockingRedisCacheWriter(connectionFactory)).cacheDefaults(config).transactionAware().build();
 
+    System.out.println("RedisCacheConfig init.");
     return cm;
   }
 

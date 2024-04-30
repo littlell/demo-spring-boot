@@ -8,14 +8,22 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
-@ConditionalOnProperty(name = "cache.type", havingValue = "caffeine")
+@ConditionalOnProperty(name = "spring.cache.type", havingValue = "caffeine")
 public class CaffeineCacheConfig {
 
   @Bean
-  public CacheManager cacheManager() {
+  public CaffeineCacheManager caffeineCacheManager() {
     CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-    cacheManager.setCaffeine(Caffeine.newBuilder().maximumSize(100));
+    Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
+        // 设置最大缓存项数
+        .maximumSize(10000)
+        // 设置写入后10分钟过期
+        .expireAfterWrite(10, TimeUnit.MINUTES);
+    cacheManager.setCaffeine(caffeine);
+    System.out.println("CaffeineCacheConfig init.");
     return cacheManager;
   }
 }
