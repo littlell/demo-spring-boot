@@ -3,43 +3,46 @@ package com.demo.spring.boot02;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * MegaCorp Repository 接口 - 优化方法签名和参数命名
+ * 使用更语义化的参数名和 List 接口替代具体实现类
+ */
 public interface MegaCorpRepository extends ElasticsearchRepository<MegaCorp, String> {
 
-  List<MegaCorp> findByFirstNameAndLastName(String jane, String smith);
+  List<MegaCorp> findByFirstNameAndLastName(String firstName, String lastName);
 
-  List<MegaCorp> findByFirstNameOrLastName(String jane, String jane1);
+  List<MegaCorp> findByFirstNameOrLastName(String firstName, String lastName);
 
-  List<MegaCorp> findByFirstName(String jane);
+  List<MegaCorp> findByFirstName(String firstName);
 
-  List<MegaCorp> findByFirstNameNot(String jane);
+  List<MegaCorp> findByFirstNameNot(String firstName);
 
-  List<MegaCorp> findByAgeBetween(int i, int i1);
+  List<MegaCorp> findByAgeBetween(Integer minAge, Integer maxAge);
 
-  List<MegaCorp> findByAgeLessThanEqual(int i);
+  List<MegaCorp> findByAgeLessThanEqual(Integer age);
 
-  List<MegaCorp> findByAgeGreaterThanEqual(int i);
+  List<MegaCorp> findByAgeGreaterThanEqual(Integer age);
 
-  List<MegaCorp> findByAgeBefore(int i);
+  List<MegaCorp> findByAgeBefore(Integer age);
 
-  List<MegaCorp> findByAgeAfter(int i);
+  List<MegaCorp> findByAgeAfter(Integer age);
 
-  List<MegaCorp> findByFirstNameLike(String jan);
+  List<MegaCorp> findByFirstNameLike(String firstNamePattern);
 
-  List<MegaCorp> findByFirstNameStartingWith(String ja);
+  List<MegaCorp> findByFirstNameStartingWith(String prefix);
 
-  List<MegaCorp> findByFirstNameEndingWith(String ne);
+  List<MegaCorp> findByFirstNameEndingWith(String suffix);
 
-  List<MegaCorp> findByFirstNameContaining(String an);
+  List<MegaCorp> findByFirstNameContaining(String substring);
 
-  List<MegaCorp> findByFirstNameIn(ArrayList<String> strings);
+  List<MegaCorp> findByFirstNameIn(List<String> firstNames);
 
-  List<MegaCorp> findByFirstNameNotIn(ArrayList<String> strings);
+  List<MegaCorp> findByFirstNameNotIn(List<String> firstNames);
 
-  List<MegaCorp> findByAgeGreaterThanEqualOrderByAgeAsc(int i);
+  List<MegaCorp> findByAgeGreaterThanEqualOrderByAgeAsc(Integer minAge);
 
   @Query("{\"bool\" : {\"must\" : {\"match\" : {\"lastName\" : \"?0\"}}}}")
-  List<MegaCorp> findByLastName(String firstName);
+  List<MegaCorp> findByLastName(String lastName);
 }

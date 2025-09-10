@@ -1,24 +1,29 @@
 package com.demo.spring.boot02;
 
-import org.elasticsearch.client.RequestOptions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * MegaCorp Controller - 优化使用构造函数注入和现代语法
+ * 移除了 @Autowired 字段注入，使用构造函数注入
+ * 使用 List.of() 替代匿名内部类
+ */
 @RestController
-@RequestMapping(value = "/megacorp")
+@RequestMapping("/megacorp")
 public class MegaCorpController {
 
-  @Autowired
-  private MegaCorpRepository megaCorpRepository;
+  private final MegaCorpRepository megaCorpRepository;
+  private final ElasticsearchTemplate elasticsearchTemplate;
 
-  @Autowired
-  private ElasticsearchTemplate elasticsearchTemplate;
+  public MegaCorpController(MegaCorpRepository megaCorpRepository,
+                            ElasticsearchTemplate elasticsearchTemplate) {
+    this.megaCorpRepository = megaCorpRepository;
+    this.elasticsearchTemplate = elasticsearchTemplate;
+  }
 
   @GetMapping("/and")
   public Object and() {
@@ -87,24 +92,12 @@ public class MegaCorpController {
 
   @GetMapping("/in")
   public Object in() {
-    return megaCorpRepository.findByFirstNameIn(new ArrayList<String>() {
-      {
-        add("a");
-        add("b");
-        add("Jane");
-      }
-    });
+    return megaCorpRepository.findByFirstNameIn(List.of("a", "b", "Jane"));
   }
 
   @GetMapping("/notIn")
   public Object notIn() {
-    return megaCorpRepository.findByFirstNameNotIn(new ArrayList<String>() {
-      {
-        add("a");
-        add("b");
-        add("Jane");
-      }
-    });
+    return megaCorpRepository.findByFirstNameNotIn(List.of("a", "b", "Jane"));
   }
 
   @GetMapping("/orderBy")
@@ -118,20 +111,22 @@ public class MegaCorpController {
   }
 
   /**
-   * Dynamic query
+   * Dynamic query - 这是一个动态查询的示例
+   * 注释掉的代码展示了如何使用原生 Elasticsearch 客户端进行复杂查询
    */
-//  @GetMapping("/search/dynamic")
-//  public Object dynamic() throws IOException {
-//    SearchRequest searchRequest = new SearchRequest("megacorp");
-//    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//    BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-//    boolQueryBuilder.must(QueryBuilders.termQuery("lastName", "smith"));
-//    boolQueryBuilder.must(QueryBuilders.termQuery("firstName", "John"));
-//    searchSourceBuilder.query(boolQueryBuilder);
-//    searchRequest.source(searchSourceBuilder);
-//    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-//
-//    return searchResponse;
-//  }
+  /*
+  @GetMapping("/search/dynamic")
+  public Object dynamic() throws IOException {
+    SearchRequest searchRequest = new SearchRequest("megacorp");
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+    BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+    boolQueryBuilder.must(QueryBuilders.termQuery("lastName", "smith"));
+    boolQueryBuilder.must(QueryBuilders.termQuery("firstName", "John"));
+    searchSourceBuilder.query(boolQueryBuilder);
+    searchRequest.source(searchSourceBuilder);
+    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
+    return searchResponse;
+  }
+  */
 }

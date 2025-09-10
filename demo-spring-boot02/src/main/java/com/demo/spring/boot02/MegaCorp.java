@@ -4,7 +4,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * MegaCorp 实体类 - 使用现代 Java 语法优化
+ * 使用了标准的 getter/setter，并添加了 equals、hashCode 和 toString 方法
+ */
 @Document(indexName = "megacorp")
 public class MegaCorp {
   @Id
@@ -73,5 +78,35 @@ public class MegaCorp {
 
   public void setInterests(List<String> interests) {
     this.interests = interests;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MegaCorp megaCorp = (MegaCorp) o;
+    return Objects.equals(id, megaCorp.id) &&
+        Objects.equals(firstName, megaCorp.firstName) &&
+        Objects.equals(lastName, megaCorp.lastName) &&
+        Objects.equals(age, megaCorp.age) &&
+        Objects.equals(about, megaCorp.about) &&
+        Objects.equals(interests, megaCorp.interests);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, firstName, lastName, age, about, interests);
+  }
+
+  @Override
+  public String toString() {
+    return "MegaCorp{" +
+        "id='" + id + '\'' +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", age=" + age +
+        ", about='" + about + '\'' +
+        ", interests=" + interests +
+        '}';
   }
 }

@@ -1,4 +1,4 @@
 spring:
   elasticsearch:
     rest:
-      uris: "http://dev-middleware-es:9200"
+      uris: "http://dev.com:9200"
