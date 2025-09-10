@@ -3,16 +3,15 @@ spring:
   datasource:
     username: root
     password: Ngtrade!@#
-    url: jdbc:mysql://127.0.0.1:3306/spring?characterEncoding=utf8&useSSL=false
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    password: 123456
+    url: jdbc:mysql://dev.com:3306/spring?characterEncoding=utf8&useSSL=false
+  data:
+    redis:
+      host: dev.com
+      port: 6379
+      password: 123456
 server:
   port: 8080
 management:
-  #  security:
-  #    enabled: false
   server:
     port: 8001
   endpoints:

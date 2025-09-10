@@ -3,20 +3,21 @@ package com.demo.spring.boot01;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class HelloController {
+@RequestMapping("/env")
+public class EnvController {
 
   @Value("${foo}")
   private String foo;
 
-  @RequestMapping("/hello")
-  ResponseEntity<String> home() {
+  @GetMapping
+  ResponseEntity<String> p() {
     String content = "Hello, " + foo;
-    ResponseEntity<String> responseEntity = new ResponseEntity<String>(content, HttpStatus.OK);
-    return responseEntity;
+    return new ResponseEntity<>(content, HttpStatus.OK);
   }
 }
 
