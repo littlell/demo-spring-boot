@@ -1,11 +1,18 @@
 package com.demo.spring.boot02;
 
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * MegaCorp Controller - 优化使用构造函数注入和现代语法
@@ -110,23 +117,97 @@ public class MegaCorpController {
     return megaCorpRepository.findByLastName("Smith");
   }
 
-  /**
-   * Dynamic query - 这是一个动态查询的示例
-   * 注释掉的代码展示了如何使用原生 Elasticsearch 客户端进行复杂查询
-   */
-  /*
-  @GetMapping("/search/dynamic")
-  public Object dynamic() throws IOException {
-    SearchRequest searchRequest = new SearchRequest("megacorp");
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-    boolQueryBuilder.must(QueryBuilders.termQuery("lastName", "smith"));
-    boolQueryBuilder.must(QueryBuilders.termQuery("firstName", "John"));
-    searchSourceBuilder.query(boolQueryBuilder);
-    searchRequest.source(searchSourceBuilder);
-    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+  // ============== 动态查询示例 ==============
 
-    return searchResponse;
+  /**
+   * 动态查询示例1：根据条件动态构建查询
+   * 示例URL：/megacorp/dynamic/simple?firstName=Jane&minAge=25
+   */
+  @GetMapping("/dynamic/simple")
+  public List<MegaCorp> dynamicSearchSimple(
+      @RequestParam(required = false) String firstName,
+      @RequestParam(required = false) Integer minAge) {
+
+    Criteria criteria = new Criteria();
+
+    // 根据参数动态添加查询条件
+    if (firstName != null && !firstName.trim().isEmpty()) {
+      criteria = criteria.and("firstName").matches(firstName);
+    }
+
+    if (minAge != null) {
+      criteria = criteria.and("age").greaterThanEqual(minAge);
+    }
+
+    CriteriaQuery query = new CriteriaQuery(criteria);
+    SearchHits<MegaCorp> searchHits = elasticsearchTemplate.search(query, MegaCorp.class);
+    
+    return searchHits.stream()
+        .map(SearchHit::getContent)
+        .collect(Collectors.toList());
   }
-  */
+
+  /**
+   * 动态查询示例2：多条件组合查询
+   * 示例URL：/megacorp/dynamic/multi?firstName=Jane&lastName=Smith
+   */
+  @GetMapping("/dynamic/multi")
+  public List<MegaCorp> dynamicMultiSearch(
+      @RequestParam(required = false) String firstName,
+      @RequestParam(required = false) String lastName) {
+    
+    Criteria criteria = new Criteria();
+    boolean hasCriteria = false;
+
+    // 动态添加多个条件
+    if (firstName != null && !firstName.trim().isEmpty()) {
+      criteria = criteria.and("firstName").matches(firstName);
+      hasCriteria = true;
+    }
+
+    if (lastName != null && !lastName.trim().isEmpty()) {
+      if (hasCriteria) {
+        criteria = criteria.and("lastName").matches(lastName);
+      } else {
+        criteria = new Criteria("lastName").matches(lastName);
+      }
+    }
+
+    CriteriaQuery query = new CriteriaQuery(criteria);
+    SearchHits<MegaCorp> searchHits = elasticsearchTemplate.search(query, MegaCorp.class);
+    
+    return searchHits.stream()
+        .map(SearchHit::getContent)
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 动态查询示例3：年龄范围查询
+   * 示例URL：/megacorp/dynamic/age?minAge=20&maxAge=40
+   */
+  @GetMapping("/dynamic/age")
+  public List<MegaCorp> dynamicAgeSearch(
+      @RequestParam(required = false) Integer minAge,
+      @RequestParam(required = false) Integer maxAge) {
+
+    Criteria criteria = new Criteria();
+    
+    if (minAge != null && maxAge != null) {
+      // 年龄范围查询
+      criteria = criteria.and("age").between(minAge, maxAge);
+    } else if (minAge != null) {
+      // 最小年龄查询
+      criteria = criteria.and("age").greaterThanEqual(minAge);
+    } else if (maxAge != null) {
+      // 最大年龄查询
+      criteria = criteria.and("age").lessThanEqual(maxAge);
+    }
+
+    CriteriaQuery query = new CriteriaQuery(criteria);
+    SearchHits<MegaCorp> searchHits = elasticsearchTemplate.search(query, MegaCorp.class);
+    
+    return searchHits.stream()
+        .map(SearchHit::getContent)
+        .collect(Collectors.toList());
+  }
 }
