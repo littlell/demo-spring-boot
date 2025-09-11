@@ -1,0 +1,40 @@
+spring:
+  rabbitmq:
+    username: ngtrade
+    password: 123456
+    host: dev.com
+    port: 5672
+    virtual-host: /
+
+mq:
+  config:
+    # 直连交换机配置
+    direct:
+      exchange: direct.exchange
+      queue:
+        info: direct.queue.info
+        warning: direct.queue.warning
+        error: direct.queue.error
+      routing-key:
+        info: info
+        warning: warning
+        error: error
+    # 扇出交换机配置
+    fanout:
+      exchange: fanout.exchange
+      queue:
+        email: fanout.queue.email
+        sms: fanout.queue.sms
+        push: fanout.queue.push
+    # 主题交换机配置
+    topic:
+      exchange: topic.exchange
+      queue:
+        order: topic.queue.order
+        user: topic.queue.user
+        all: topic.queue.all
+      routing-key:
+        order-create: order.create
+        order-cancel: order.cancel
+        user-login: user.login
+        user-logout: user.logout
