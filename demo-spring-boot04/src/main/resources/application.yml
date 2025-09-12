@@ -1,0 +1,18 @@
+# Spring Boot 应用配置
+spring:
+  application:
+    name: demo-spring-boot04
+  
+  # Cassandra 数据库配置
+  data:
+    cassandra:
+      keyspace-name: spring_cassandra
+      contact-points: 
+        - dev.com:9042
+      local-datacenter: datacenter1
+      schema-action: CREATE_IF_NOT_EXISTS
+      session-name: demo-session
+
+# 服务器配置
+server:
+  port: 8080
