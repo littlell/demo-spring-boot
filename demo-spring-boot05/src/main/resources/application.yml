@@ -1,0 +1,16 @@
+# Spring Boot 应用配置
+spring:
+  application:
+    name: demo-spring-boot05
+  
+  # MongoDB 数据库配置
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: spring_mongodb
+      authentication-database: admin
+
+# 服务器配置
+server:
+  port: 8080
