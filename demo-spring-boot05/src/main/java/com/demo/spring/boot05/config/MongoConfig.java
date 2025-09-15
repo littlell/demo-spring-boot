@@ -11,3 +11,4 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     return "spring_mongodb";
   }
 }
+

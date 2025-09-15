@@ -61,3 +61,4 @@ print("=== 索引信息 ===");
 db.customers.getIndexes();
 
 print("MongoDB 集合和数据初始化完成！");
+

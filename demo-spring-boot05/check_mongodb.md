@@ -83,3 +83,4 @@ telnet localhost 27017
 ```bash
 docker exec -it mongodb-demo mongosh --eval "db.version()"
 ```
+
