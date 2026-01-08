@@ -6,4 +6,4 @@ spring:
     username: ngtrade
     virtual-host: /
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: dev.com:9092
